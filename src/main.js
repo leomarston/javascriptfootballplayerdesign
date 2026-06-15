@@ -32,7 +32,7 @@ async function boot() {
 
   setProgress(0.3, 'Raising the stadium…');
   const { sunDir } = createSky(engine.scene);
-  createLighting(engine.scene, sunDir);
+  const lighting = createLighting(engine.scene, sunDir);
   createPitch(engine.scene);
 
   setProgress(0.55, 'Stitching the kit…');
@@ -67,6 +67,11 @@ async function boot() {
     player.update(dt, move, sprint);
     ball.update(dt);
     camera.update(dt, player.yaw);
+
+    // keep the shadow-casting sun centered on the player so shadows stay crisp
+    const pp = player.object.position;
+    lighting.sun.target.position.set(pp.x, 0, pp.z);
+    lighting.sun.position.set(pp.x + sunDir.x * 40, sunDir.y * 40, pp.z + sunDir.z * 40);
 
     if ((hudTick = (hudTick + 1) % 5) === 0) {
       hud.speed.textContent = player.speedKmh.toFixed(1);
