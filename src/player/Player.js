@@ -178,7 +178,7 @@ export class Player {
   }
 
   get speedKmh() { return this.speed * 3.6; }
-  setBonesVisible(v) { for (const m of this.model.boneViz) m.visible = v; }
+  setBonesVisible(v) { if (this.model.skeletonHelper) this.model.skeletonHelper.visible = v; }
 }
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
