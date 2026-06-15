@@ -106,15 +106,15 @@ export function createPlayerModel(cfg = {}) {
     }
   };
 
-  // ---- torso (jersey) ----
+  // ---- torso (jersey) — athletic V-taper: slim waist, broad chest/shoulders
   addStack([
     { y: 0.98, x: 0, rx: 0.135, rz: 0.105, w: [['pelvis', 0.6], ['spine', 0.4]], ao: 0.9, mat: 'jersey' },
-    { y: 1.06, x: 0, rx: 0.128, rz: 0.098, w: [['spine', 1]], mat: 'jersey' },
-    { y: 1.16, x: 0, rx: 0.150, rz: 0.112, w: [['spine', 0.6], ['chest', 0.4]], mat: 'jersey' },
-    { y: 1.26, x: 0, rx: 0.176, rz: 0.122, w: [['chest', 1]], mat: 'jersey' },
-    { y: 1.35, x: 0, rx: 0.188, rz: 0.120, w: [['chest', 1]], mat: 'jersey' },
-    { y: 1.41, x: 0, rx: 0.178, rz: 0.116, w: [['chest', 1]], ao: 0.95, mat: 'jersey' }, // shoulder shelf (rounder)
-    { y: 1.46, x: 0, rx: 0.132, rz: 0.094, w: [['chest', 0.7], ['neck', 0.3]], ao: 0.88, mat: 'jersey' }, // trapezius -> neck (gentler slope)
+    { y: 1.06, x: 0, rx: 0.120, rz: 0.093, w: [['spine', 1]], mat: 'jersey' },          // slim waist
+    { y: 1.16, x: 0, rx: 0.152, rz: 0.114, w: [['spine', 0.6], ['chest', 0.4]], mat: 'jersey' },
+    { y: 1.26, x: 0, rx: 0.182, rz: 0.124, w: [['chest', 1]], mat: 'jersey' },          // pecs
+    { y: 1.35, x: 0, rx: 0.198, rz: 0.124, w: [['chest', 1]], mat: 'jersey' },          // broad chest
+    { y: 1.41, x: 0, rx: 0.190, rz: 0.118, w: [['chest', 1]], ao: 0.95, mat: 'jersey' }, // shoulder shelf
+    { y: 1.46, x: 0, rx: 0.134, rz: 0.094, w: [['chest', 0.7], ['neck', 0.3]], ao: 0.88, mat: 'jersey' }, // trapezius -> neck
   ]);
   // ---- neck (skin) — short & sturdy (athletic, sterno-mastoid bulk) ----
   addStack([
@@ -124,20 +124,20 @@ export function createPlayerModel(cfg = {}) {
   ]);
   // ---- shorts: hip/waistband piece (the two legs cover the rest) ----
   addStack([
-    { y: 0.95, x: 0, rx: 0.134, rz: 0.100, w: [['pelvis', 1]], ao: 0.92, mat: 'shorts' }, // hip line
-    { y: 1.00, x: 0, rx: 0.140, rz: 0.104, w: [['pelvis', 1]], mat: 'shorts' },            // waistband
-    { y: 1.04, x: 0, rx: 0.128, rz: 0.099, w: [['pelvis', 0.7], ['spine', 0.3]], mat: 'shorts' }, // tuck under jersey hem
+    { y: 0.95, x: 0, rx: 0.130, rz: 0.099, w: [['pelvis', 1]], ao: 0.92, mat: 'shorts' }, // hip line
+    { y: 1.00, x: 0, rx: 0.132, rz: 0.101, w: [['pelvis', 1]], mat: 'shorts' },            // waistband (under jersey hem)
+    { y: 1.04, x: 0, rx: 0.122, rz: 0.096, w: [['pelvis', 0.7], ['spine', 0.3]], mat: 'shorts' }, // tuck under jersey hem
   ]);
 
   // ---- arms + shorts-leg + legs, per side ----
   for (const [s, side] of [[1, 'L'], [-1, 'R']]) {
     addStack([
-      { y: 1.435, x: 0.133 * s, rx: 0.053, rz: 0.051, w: [['chest', 0.55], [`shoulder.${side}`, 0.45]], ao: 0.9, mat: 'jersey' }, // deltoid cap, rounded into the shoulder slope
-      { y: 1.39, x: 0.150 * s, rx: 0.052, rz: 0.051, w: [[`shoulder.${side}`, 0.85], ['chest', 0.15]], ao: 0.94, mat: 'jersey' },
-      { y: 1.31, x: 0.150 * s, rx: 0.044, rz: 0.044, w: [[`shoulder.${side}`, 1]], mat: 'jersey' },
-      { y: 1.25, x: 0.148 * s, rx: 0.042, rz: 0.042, w: [[`shoulder.${side}`, 0.9], [`elbow.${side}`, 0.1]], mat: 'skin' },
-      { y: 1.165, x: 0.146 * s, rx: 0.036, rz: 0.036, w: [[`shoulder.${side}`, 0.5], [`elbow.${side}`, 0.5]], mat: 'skin' },
-      { y: 1.09, x: 0.143 * s, rx: 0.039, rz: 0.039, w: [[`elbow.${side}`, 0.9], [`shoulder.${side}`, 0.1]], mat: 'skin' },
+      { y: 1.435, x: 0.140 * s, rx: 0.056, rz: 0.054, w: [['chest', 0.55], [`shoulder.${side}`, 0.45]], ao: 0.9, mat: 'jersey' }, // deltoid cap (broad shoulder)
+      { y: 1.39, x: 0.154 * s, rx: 0.055, rz: 0.054, w: [[`shoulder.${side}`, 0.85], ['chest', 0.15]], ao: 0.94, mat: 'jersey' },
+      { y: 1.31, x: 0.152 * s, rx: 0.046, rz: 0.046, w: [[`shoulder.${side}`, 1]], mat: 'jersey' },
+      { y: 1.25, x: 0.149 * s, rx: 0.044, rz: 0.044, w: [[`shoulder.${side}`, 0.9], [`elbow.${side}`, 0.1]], mat: 'skin' }, // biceps
+      { y: 1.165, x: 0.146 * s, rx: 0.040, rz: 0.040, w: [[`shoulder.${side}`, 0.5], [`elbow.${side}`, 0.5]], mat: 'skin' },
+      { y: 1.09, x: 0.143 * s, rx: 0.041, rz: 0.041, w: [[`elbow.${side}`, 0.9], [`shoulder.${side}`, 0.1]], mat: 'skin' }, // forearm
       { y: 1.00, x: 0.140 * s, rx: 0.033, rz: 0.033, w: [[`elbow.${side}`, 1]], mat: 'skin' },
       { y: 0.94, x: 0.137 * s, rx: 0.028, rz: 0.028, w: [[`elbow.${side}`, 0.55], [`wrist.${side}`, 0.45]], mat: 'skin' },
       { y: 0.905, x: 0.136 * s, rx: 0.026, rz: 0.026, w: [[`wrist.${side}`, 1]], mat: 'skin' },
