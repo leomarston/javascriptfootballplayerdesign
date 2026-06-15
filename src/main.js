@@ -48,6 +48,27 @@ async function boot() {
 
   buildHud(player, camera, engine);
 
+  // ---- optional: swap in an external rigged glTF character ----
+  // Use ?model=soldier  |  ?model=xbot  |  ?model=<url-to-any-rigged-.glb>
+  // (e.g. a footballer exported from Blender, Sketchfab/CC0, Mixamo, Ready Player Me).
+  // The model rides on all the same movement/physics/camera; it animates with
+  // its OWN clips. Off by default — the built-in procedural player is used.
+  let character = null;
+  const modelSpec = new URLSearchParams(location.search).get('model');
+  if (modelSpec) {
+    setProgress(0.9, 'Loading character model…');
+    try {
+      const { loadCharacter } = await import('./player/GLTFCharacter.js');
+      const tint = new URLSearchParams(location.search).get('tint');
+      character = await loadCharacter(modelSpec, { height: 1.85, tint: tint ? Number(tint) : undefined });
+      player.object.add(character.root);
+      player.model.root.visible = false;     // hide the procedural mesh
+      console.info('Loaded external character:', modelSpec);
+    } catch (e) {
+      console.warn('Could not load model "' + modelSpec + '" — using the built-in player.', e);
+    }
+  }
+
   // ---- main loop ----
   const hud = {
     speed: document.getElementById('statSpeed'),
@@ -67,6 +88,12 @@ async function boot() {
     player.update(dt, move, sprint);
     ball.update(dt);
     camera.update(dt, player.yaw);
+
+    if (character) {
+      character.setState(player.actionName || player.stateLabel);
+      character.setTimeScale(player.speed > 0.3 ? THREE.MathUtils.clamp(player.speed / 3.5, 0.6, 1.6) : 1);
+      character.update(dt);
+    }
 
     // keep the shadow-casting sun centered on the player so shadows stay crisp
     const pp = player.object.position;

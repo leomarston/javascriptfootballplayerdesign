@@ -4,3 +4,6 @@ node_modules/
 .vscode/
 .idea/
 dist/
+
+# downloaded demo models (fetched from GitHub raw at runtime)
+assets/models/*.glb

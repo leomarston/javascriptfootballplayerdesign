@@ -81,6 +81,32 @@ two goals with nets, a running track and tiered crowd stands.
 
 ---
 
+## 🧍 Loading a real rigged character (glTF)
+
+The built-in player is generated in code, which tops out at a clean *stylized*
+look — procedural code can't reach photo-scanned realism. To get an
+**engine/AAA-grade footballer**, drop in a real authored model: the game can
+load any rigged humanoid **glTF/GLB** and drive it from the same
+movement/physics/camera, animating it with the model's own clips.
+
+```
+http://localhost:5173/?model=soldier            # bundled demo (rigged human)
+http://localhost:5173/?model=xbot               # bundled demo (Mixamo mannequin)
+http://localhost:5173/?model=https://…/you.glb  # ANY rigged .glb URL
+http://localhost:5173/?model=…&tint=0x12379e    # optional colour tint
+```
+
+The model is auto-scaled to ~1.8 m and grounded; clip names are matched fuzzily
+(`idle` / `walk` / `run` / `sprint`). Where to get a proper footballer:
+
+- **Blender / Maya** — export your own sculpted, kitted, rigged player as `.glb`.
+- **Mixamo** (free) — a rigged character + locomotion clips in the same `.glb`.
+- **Ready Player Me** (free, in-browser) — `?model=https://models.readyplayer.me/<id>.glb`.
+- **Sketchfab** — many CC0 / CC-BY footballer models; download the `.glb`.
+
+> Note: real eFootball/PES player assets are Konami's proprietary IP and are not
+> used here. Bring a model you've made or that is licensed for your use.
+
 ## 🗂 Architecture
 
 ```
