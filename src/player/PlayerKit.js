@@ -56,8 +56,10 @@ export function createKit(cfg = {}) {
   const sole = new THREE.MeshStandardMaterial({ color: 0xf2f4f7, roughness: 0.5 });
   const hair = new THREE.MeshStandardMaterial({ color: c.hair, roughness: 0.74, metalness: 0.02 });
   const mouth = new THREE.MeshStandardMaterial({ color: 0x6a3a33, roughness: 0.6 });
-  const eyeWhite = new THREE.MeshStandardMaterial({ color: 0xeeeee6, roughness: 0.22 });
-  const eyeIris = new THREE.MeshStandardMaterial({ color: 0x35211a, roughness: 0.18, metalness: 0.0 });
+  const eyeWhite = new THREE.MeshStandardMaterial({
+    color: 0xf3f2ec, roughness: 0.2, emissive: 0x121212,
+  });
+  const eyeIris = new THREE.MeshStandardMaterial({ color: 0x5b3b24, roughness: 0.25, metalness: 0.0 });
   const pupil = new THREE.MeshStandardMaterial({ color: 0x070707, roughness: 0.12 });
   const eyeHi = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const lips = new THREE.MeshStandardMaterial({

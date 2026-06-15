@@ -46,13 +46,14 @@ export function createPlayerModel(cfg = {}) {
   B('pelvis', null, 0, 1.02);
   B('spine', 'pelvis', 0, 1.14);
   B('chest', 'spine', 0, 1.34);
-  B('neck', 'chest', 0, 1.56);
-  B('head', 'neck', 0, 1.66);
+  B('neck', 'chest', 0, 1.53);
+  B('head', 'neck', 0, 1.63);
   // arms
   for (const [s, side] of [[1, 'L'], [-1, 'R']]) {
-    B(`shoulder.${side}`, 'chest', 0.185 * s, 1.475);
-    B(`elbow.${side}`, `shoulder.${side}`, 0.185 * s, 1.175);
-    B(`wrist.${side}`, `elbow.${side}`, 0.185 * s, 0.905);
+    // arms angle slightly inward so they hang against the body (no floating gap)
+    B(`shoulder.${side}`, 'chest', 0.156 * s, 1.46);
+    B(`elbow.${side}`, `shoulder.${side}`, 0.146 * s, 1.165);
+    B(`wrist.${side}`, `elbow.${side}`, 0.136 * s, 0.905);
   }
   // legs
   for (const [s, side] of [[1, 'L'], [-1, 'R']]) {
@@ -111,42 +112,42 @@ export function createPlayerModel(cfg = {}) {
     { y: 1.06, x: 0, rx: 0.128, rz: 0.098, w: [['spine', 1]], mat: 'jersey' },
     { y: 1.16, x: 0, rx: 0.150, rz: 0.112, w: [['spine', 0.6], ['chest', 0.4]], mat: 'jersey' },
     { y: 1.26, x: 0, rx: 0.176, rz: 0.122, w: [['chest', 1]], mat: 'jersey' },
-    { y: 1.35, x: 0, rx: 0.182, rz: 0.118, w: [['chest', 1]], mat: 'jersey' },
-    { y: 1.43, x: 0, rx: 0.168, rz: 0.102, w: [['chest', 1]], ao: 0.92, mat: 'jersey' },
-    { y: 1.49, x: 0, rx: 0.120, rz: 0.085, w: [['chest', 0.7], ['neck', 0.3]], ao: 0.85, mat: 'jersey' },
+    { y: 1.35, x: 0, rx: 0.186, rz: 0.118, w: [['chest', 1]], mat: 'jersey' },
+    { y: 1.42, x: 0, rx: 0.182, rz: 0.108, w: [['chest', 1]], ao: 0.95, mat: 'jersey' }, // shoulder shelf
+    { y: 1.47, x: 0, rx: 0.128, rz: 0.090, w: [['chest', 0.7], ['neck', 0.3]], ao: 0.85, mat: 'jersey' }, // trapezius -> neck
   ]);
-  // ---- neck (skin) ----
+  // ---- neck (skin) — short & sturdy ----
   addStack([
-    { y: 1.47, x: 0, rx: 0.058, rz: 0.055, w: [['chest', 0.5], ['neck', 0.5]], ao: 0.85, mat: 'skin' },
-    { y: 1.55, x: 0, rx: 0.052, rz: 0.05, w: [['neck', 1]], mat: 'skin' },
-    { y: 1.62, x: 0, rx: 0.05, rz: 0.048, w: [['neck', 0.55], ['head', 0.45]], mat: 'skin' },
+    { y: 1.45, x: 0, rx: 0.066, rz: 0.062, w: [['chest', 0.5], ['neck', 0.5]], ao: 0.85, mat: 'skin' },
+    { y: 1.52, x: 0, rx: 0.058, rz: 0.055, w: [['neck', 1]], mat: 'skin' },
+    { y: 1.585, x: 0, rx: 0.052, rz: 0.05, w: [['neck', 0.5], ['head', 0.5]], mat: 'skin' },
   ]);
-  // ---- shorts: central pelvis ----
+  // ---- shorts: hip/waistband piece (the two legs cover the rest) ----
   addStack([
-    { y: 0.80, x: 0, rx: 0.150, rz: 0.120, w: [['pelvis', 1]], ao: 0.9, mat: 'shorts' },
-    { y: 0.90, x: 0, rx: 0.162, rz: 0.128, w: [['pelvis', 1]], mat: 'shorts' },
-    { y: 1.00, x: 0, rx: 0.150, rz: 0.118, w: [['pelvis', 0.7], ['spine', 0.3]], mat: 'shorts' },
+    { y: 0.92, x: 0, rx: 0.140, rz: 0.103, w: [['pelvis', 1]], ao: 0.93, mat: 'shorts' },
+    { y: 0.98, x: 0, rx: 0.148, rz: 0.108, w: [['pelvis', 1]], mat: 'shorts' },
+    { y: 1.03, x: 0, rx: 0.135, rz: 0.102, w: [['pelvis', 0.7], ['spine', 0.3]], mat: 'shorts' },
   ]);
 
   // ---- arms + shorts-leg + legs, per side ----
   for (const [s, side] of [[1, 'L'], [-1, 'R']]) {
-    const x = 0.185 * s;
     addStack([
-      { y: 1.475, x, rx: 0.064, rz: 0.064, w: [[`shoulder.${side}`, 0.7], ['chest', 0.3]], ao: 0.8, mat: 'jersey' },
-      { y: 1.40, x, rx: 0.060, rz: 0.060, w: [[`shoulder.${side}`, 1]], ao: 0.92, mat: 'jersey' },
-      { y: 1.30, x, rx: 0.052, rz: 0.052, w: [[`shoulder.${side}`, 1]], mat: 'jersey' },
-      { y: 1.24, x, rx: 0.049, rz: 0.049, w: [[`shoulder.${side}`, 0.9], [`elbow.${side}`, 0.1]], mat: 'skin' },
-      { y: 1.175, x, rx: 0.040, rz: 0.040, w: [[`shoulder.${side}`, 0.5], [`elbow.${side}`, 0.5]], mat: 'skin' },
-      { y: 1.10, x, rx: 0.044, rz: 0.044, w: [[`elbow.${side}`, 0.9], [`shoulder.${side}`, 0.1]], mat: 'skin' },
-      { y: 1.00, x, rx: 0.038, rz: 0.038, w: [[`elbow.${side}`, 1]], mat: 'skin' },
-      { y: 0.94, x, rx: 0.030, rz: 0.030, w: [[`elbow.${side}`, 0.55], [`wrist.${side}`, 0.45]], mat: 'skin' },
-      { y: 0.905, x, rx: 0.028, rz: 0.028, w: [[`wrist.${side}`, 1]], mat: 'skin' },
+      { y: 1.45, x: 0.138 * s, rx: 0.046, rz: 0.046, w: [['chest', 0.6], [`shoulder.${side}`, 0.4]], ao: 0.88, mat: 'jersey' }, // deltoid cap, blended into shoulder
+      { y: 1.39, x: 0.150 * s, rx: 0.050, rz: 0.050, w: [[`shoulder.${side}`, 0.85], ['chest', 0.15]], ao: 0.94, mat: 'jersey' },
+      { y: 1.31, x: 0.150 * s, rx: 0.044, rz: 0.044, w: [[`shoulder.${side}`, 1]], mat: 'jersey' },
+      { y: 1.25, x: 0.148 * s, rx: 0.042, rz: 0.042, w: [[`shoulder.${side}`, 0.9], [`elbow.${side}`, 0.1]], mat: 'skin' },
+      { y: 1.165, x: 0.146 * s, rx: 0.036, rz: 0.036, w: [[`shoulder.${side}`, 0.5], [`elbow.${side}`, 0.5]], mat: 'skin' },
+      { y: 1.09, x: 0.143 * s, rx: 0.039, rz: 0.039, w: [[`elbow.${side}`, 0.9], [`shoulder.${side}`, 0.1]], mat: 'skin' },
+      { y: 1.00, x: 0.140 * s, rx: 0.033, rz: 0.033, w: [[`elbow.${side}`, 1]], mat: 'skin' },
+      { y: 0.94, x: 0.137 * s, rx: 0.028, rz: 0.028, w: [[`elbow.${side}`, 0.55], [`wrist.${side}`, 0.45]], mat: 'skin' },
+      { y: 0.905, x: 0.136 * s, rx: 0.026, rz: 0.026, w: [[`wrist.${side}`, 1]], mat: 'skin' },
     ]);
     const lx = 0.105 * s;
-    // shorts leg over upper thigh
+    // shorts leg hugging the upper thigh, hem at mid-thigh
     addStack([
-      { y: 0.78, x: lx, rx: 0.118, rz: 0.108, w: [[`hip.${side}`, 1]], mat: 'shorts' },
-      { y: 0.88, x: lx, rx: 0.122, rz: 0.112, w: [[`hip.${side}`, 0.85], ['pelvis', 0.15]], mat: 'shorts' },
+      { y: 0.70, x: lx, rx: 0.100, rz: 0.095, w: [[`hip.${side}`, 1]], ao: 0.95, mat: 'shorts' },
+      { y: 0.82, x: lx, rx: 0.108, rz: 0.101, w: [[`hip.${side}`, 1]], mat: 'shorts' },
+      { y: 0.94, x: lx, rx: 0.116, rz: 0.108, w: [[`hip.${side}`, 0.9], ['pelvis', 0.1]], mat: 'shorts' },
     ]);
     // leg: thigh (skin) -> sock band (accent) -> sock (socks)
     addStack([

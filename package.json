@@ -7,15 +7,27 @@
   "scripts": {
     "start": "node serve.mjs",
     "dev": "node serve.mjs",
-    "test": "node test/validate.mjs"
+    "test": "node test/validate.mjs",
+    "shot": "xvfb-run -a node tools/render.mjs"
   },
   "repository": {
     "type": "git",
     "url": "http://local_proxy@127.0.0.1:34691/git/leomarston/javascriptfootballplayerdesign"
   },
-  "keywords": ["threejs", "webgl", "football", "soccer", "3d", "animation", "game", "efootball"],
+  "keywords": [
+    "threejs",
+    "webgl",
+    "football",
+    "soccer",
+    "3d",
+    "animation",
+    "game",
+    "efootball"
+  ],
   "license": "MIT",
   "devDependencies": {
-    "three": "0.160.0"
+    "three": "0.160.0",
+    "gl": "^8.1.6",
+    "pngjs": "^7.0.0"
   }
 }

@@ -24,11 +24,11 @@ export function buildHead(kit) {
 
   // ---- eyebrows ----
   for (const sx of [-1, 1]) {
-    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.007, 0.01), kit.brow);
-    roundEnds(brow.geometry, 0.003);
-    brow.position.set(0.04 * sx, 0.043, 0.094);
-    brow.rotation.z = -0.16 * sx;
-    brow.rotation.x = -0.18;
+    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.005, 0.008), kit.brow);
+    roundEnds(brow.geometry, 0.0025);
+    brow.position.set(0.04 * sx, 0.058, 0.097);
+    brow.rotation.z = -0.14 * sx;
+    brow.rotation.x = -0.16;
     g.add(brow);
   }
 
@@ -91,15 +91,15 @@ function sculpt(v) {
   const front = clamp((z - 0.02) / 0.06, 0, 1); // 0 behind, 1 on the face
   let dx = 0, dy = 0, dz = 0;
 
-  // brow ridge
-  const brow = gauss(y - 0.045, 0.02) * gauss(x, 0.07) * front;
-  dz += 0.008 * brow;
+  // brow ridge (subtle, so it doesn't shadow the eyes)
+  const brow = gauss(y - 0.05, 0.018) * gauss(x, 0.07) * front;
+  dz += 0.005 * brow;
 
-  // nose: bridge -> tip (forward), nostril flare
-  const noseCol = gauss(x, 0.018) * gauss(y + 0.004, 0.05) * clamp((z - 0.03) / 0.07, 0, 1);
-  dz += 0.030 * noseCol;
-  const nostril = gauss(Math.abs(x) - 0.012, 0.012) * gauss(y + 0.03, 0.014) * front;
-  dx += Math.sign(x || 1) * 0.004 * nostril; dz += 0.004 * nostril;
+  // nose: subtle bridge -> tip (forward), gentle nostril
+  const noseCol = gauss(x, 0.011) * gauss(y + 0.006, 0.034) * clamp((z - 0.03) / 0.07, 0, 1);
+  dz += 0.013 * noseCol;
+  const nostril = gauss(Math.abs(x) - 0.012, 0.009) * gauss(y + 0.026, 0.01) * front;
+  dx += Math.sign(x || 1) * 0.0025 * nostril; dz += 0.0015 * nostril;
 
   // philtrum groove (nose -> upper lip)
   const phil = gauss(x, 0.006) * gauss(y + 0.04, 0.012) * front;
@@ -109,9 +109,9 @@ function sculpt(v) {
   const cheek = gauss(Math.abs(x) - 0.05, 0.028) * gauss(y + 0.012, 0.03) * clamp((z - 0.03) / 0.06, 0, 1);
   dz += 0.008 * cheek; dx += Math.sign(x || 1) * 0.006 * cheek;
 
-  // eye sockets (recess)
-  const eye = gauss(Math.abs(x) - 0.038, 0.022) * gauss(y - 0.012, 0.02) * clamp((z - 0.04) / 0.05, 0, 1);
-  dz -= 0.011 * eye;
+  // very faint eye-socket hint (kept tiny so eyes stay fully lit)
+  const eye = gauss(Math.abs(x) - 0.038, 0.02) * gauss(y - 0.014, 0.016) * clamp((z - 0.04) / 0.05, 0, 1);
+  dz -= 0.0015 * eye;
 
   // lips + mouth crease
   const crease = gauss(y + 0.058, 0.005) * gauss(x, 0.03) * front;
@@ -133,76 +133,75 @@ function sculpt(v) {
 
 /* ----------------------------------------------------------------- eye */
 function buildEye(sx, kit) {
+  // A clean almond eye that sits flush on the face and stays fully lit.
   const eye = new THREE.Group();
-  eye.position.set(0.038 * sx, 0.012, 0.073);
+  eye.position.set(0.039 * sx, 0.018, 0.0995);
+  eye.rotation.y = 0.32 * sx;        // follow the face normal (faces out)
+  eye.rotation.z = -0.05 * sx;       // slight outer tilt
 
-  const white = new THREE.Mesh(new THREE.SphereGeometry(0.0165, 18, 14), kit.eyeWhite);
-  white.scale.set(1.15, 0.92, 0.8);
+  // thin dark lash-line behind defines the almond outline
+  const liner = new THREE.Mesh(new THREE.SphereGeometry(0.0145, 20, 14), kit.brow);
+  liner.scale.set(1.9, 1.18, 0.16);
+  liner.position.z = -0.001;
+  eye.add(liner);
+
+  // white sclera almond (sits proud of the face so it always catches light)
+  const white = new THREE.Mesh(new THREE.SphereGeometry(0.0135, 22, 16), kit.eyeWhite);
+  white.scale.set(1.7, 1.02, 0.45);
+  white.position.z = 0.0025;
   eye.add(white);
 
-  const iris = new THREE.Mesh(new THREE.SphereGeometry(0.0085, 16, 12), kit.eyeIris);
-  iris.position.z = 0.011;
+  // iris + pupil on the white
+  const iris = new THREE.Mesh(new THREE.CircleGeometry(0.0078, 22), kit.eyeIris);
+  iris.position.set(0, 0, 0.0085);
   eye.add(iris);
-  const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.004, 12, 10), kit.pupil);
-  pupil.position.z = 0.016;
+  const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.0035, 16), kit.pupil);
+  pupil.position.set(0, 0, 0.0092);
   eye.add(pupil);
-  const hi = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 8, 8), kit.eyeHi);
-  hi.position.set(0.004 * sx, 0.004, 0.017);
+  const hi = new THREE.Mesh(new THREE.CircleGeometry(0.0019, 10), kit.eyeHi);
+  hi.position.set(0.003 * sx, 0.003, 0.0098);
   eye.add(hi);
-
-  // upper eyelid (skin) covers the top third
-  const lid = new THREE.Mesh(new THREE.SphereGeometry(0.019, 18, 12, 0, TAU, 0, Math.PI * 0.55), kit.skin);
-  lid.scale.set(1.2, 1.0, 0.85);
-  lid.rotation.x = -0.5;
-  lid.position.set(0, 0.004, 0.004);
-  eye.add(lid);
-  // lower lid hint
-  const llid = new THREE.Mesh(new THREE.SphereGeometry(0.018, 16, 10, 0, TAU, 0, Math.PI * 0.3), kit.skin);
-  llid.scale.set(1.15, 1.0, 0.8);
-  llid.rotation.x = Math.PI + 0.4;
-  llid.position.set(0, -0.006, 0.004);
-  eye.add(llid);
 
   return eye;
 }
 
 /* ----------------------------------------------------------------- hair */
 function buildHair(kit) {
-  const geo = new THREE.SphereGeometry(R * 1.05, 56, 44, 0, TAU, 0, Math.PI * 0.7);
+  // a short, swept hairstyle that sits ON TOP of the skull with the hairline
+  // clearly above the brow (forehead exposed), lower at the sides/back.
+  const geo = new THREE.SphereGeometry(R * 1.04, 56, 40, 0, TAU, 0, Math.PI * 0.52);
   const pos = geo.attributes.position;
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i);
     const dir = v.clone().normalize();
-    // receding hairline: cut higher at the front (forehead), lower at back/sides
-    const fr = v.z / R;                              // -1 back .. +1 front
-    const cut = -0.16 + 0.26 * clamp(fr, 0, 1) - 0.02 * (1 - Math.abs(v.x) / R);
+    const fr = clamp(v.z / R, -1, 1);          // -1 back .. +1 front
+    const side = Math.abs(v.x) / R;
+    // hairline: high at the forehead, lower at sides, lower at the back
+    const cut = 0.078 * Math.max(fr, 0) - 0.085 * Math.max(-fr, 0) - 0.05 * side - 0.005;
     if (v.y < cut) {
-      // collapse below-hairline verts onto a clean edge at y=cut, hugging skull
       const r = R * 1.02;
-      const yy = clamp(cut, -0.2, R);
+      const yy = clamp(cut, -0.12, R);
       const rad = Math.sqrt(Math.max(0, r * r - yy * yy));
       const ang = Math.atan2(v.z, v.x);
       v.set(Math.cos(ang) * rad, yy, Math.sin(ang) * rad);
     } else {
-      // volume: push outward with a little noise
-      const n = 0.004 * (Math.sin(dir.x * 40) * Math.sin(dir.z * 38) * 0.5 + 0.5);
-      v.addScaledVector(dir, 0.006 + n);
+      const n = 0.0028 * (Math.sin(dir.x * 34) * Math.sin(dir.z * 30) * 0.5 + 0.5);
+      v.addScaledVector(dir, 0.004 + n);
     }
   }
   geo.computeVertexNormals();
   const hair = new THREE.Mesh(geo, kit.hair);
-  hair.scale.set(0.98, 1.06, 1.02);
-  hair.position.set(0, 0.008, -0.004);
+  hair.scale.set(1.0, 1.04, 1.02);
+  hair.position.set(0, 0.004, -0.006);
 
   const group = new THREE.Group();
   group.add(hair);
 
-  // sideburns
   for (const sx of [-1, 1]) {
-    const sb = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.05, 0.02), kit.hair);
-    roundEnds(sb.geometry, 0.005);
-    sb.position.set(0.096 * sx, 0.0, 0.0);
+    const sb = new THREE.Mesh(new THREE.BoxGeometry(0.011, 0.038, 0.018), kit.hair);
+    roundEnds(sb.geometry, 0.004);
+    sb.position.set(0.094 * sx, 0.01, 0.004);
     group.add(sb);
   }
   return group;
