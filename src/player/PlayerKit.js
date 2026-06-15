@@ -58,6 +58,14 @@ export function createKit(cfg = {}) {
   const mouth = new THREE.MeshStandardMaterial({ color: 0x6a3a33, roughness: 0.6 });
   const eyeWhite = new THREE.MeshStandardMaterial({ color: 0xeeeee6, roughness: 0.22 });
   const eyeIris = new THREE.MeshStandardMaterial({ color: 0x35211a, roughness: 0.18, metalness: 0.0 });
+  const pupil = new THREE.MeshStandardMaterial({ color: 0x070707, roughness: 0.12 });
+  const eyeHi = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const lips = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(c.skin).lerp(new THREE.Color(0x9c4a44), 0.42), roughness: 0.46,
+  });
+  const innerEar = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(c.skin).multiplyScalar(0.7), roughness: 0.72,
+  });
   const brow = new THREE.MeshStandardMaterial({ color: c.hair, roughness: 0.8 });
   const collarMat = new THREE.MeshPhysicalMaterial({ color: c.secondary, roughness: 0.62, sheen: 0.5 });
 
@@ -75,6 +83,7 @@ export function createKit(cfg = {}) {
     cfg: c,
     body: { skin: bodySkin, jersey: bodyJersey, shorts: bodyShorts, socks: bodySocks, accent: bodyAccent },
     skin, boots, bootAccent, sole, hair, mouth, eyeWhite, eyeIris, brow, collarMat,
+    pupil, eyeHi, lips, innerEar,
     numberMat, crestMat,
   };
 }

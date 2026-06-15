@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createKit } from './PlayerKit.js';
+import { buildHead } from './Head.js';
 
 const TAU = Math.PI * 2;
 const N = 24;            // radial segments per body ring
@@ -218,73 +219,7 @@ export function createPlayerModel(cfg = {}) {
   };
 }
 
-/* ============================ head & face ============================ */
-function buildHead(kit) {
-  const g = new THREE.Group();
-  g.position.y = 0.085;
-
-  const skull = new THREE.Mesh(new THREE.SphereGeometry(0.105, 32, 26), kit.skin);
-  skull.scale.set(0.92, 1.06, 1.0);
-  g.add(skull);
-
-  const jaw = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 18), kit.skin);
-  jaw.scale.set(1.0, 0.82, 1.06);
-  jaw.position.set(0, -0.068, 0.014);
-  g.add(jaw);
-
-  const cheek = (sx) => {
-    const c = new THREE.Mesh(new THREE.SphereGeometry(0.03, 14, 12), kit.skin);
-    c.scale.set(1.0, 0.8, 0.8);
-    c.position.set(0.05 * sx, -0.022, 0.078);
-    g.add(c);
-  };
-  cheek(-1); cheek(1);
-
-  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.062, 10), kit.skin);
-  nose.rotation.x = Math.PI / 2.05;
-  nose.position.set(0, -0.012, 0.103);
-  g.add(nose);
-
-  for (const sx of [-1, 1]) {
-    const socket = new THREE.Group();
-    socket.position.set(0.038 * sx, 0.012, 0.084);
-    const white = new THREE.Mesh(new THREE.SphereGeometry(0.018, 16, 12), kit.eyeWhite);
-    white.scale.set(1.2, 0.85, 0.7);
-    socket.add(white);
-    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.0095, 12, 10), kit.eyeIris);
-    iris.position.set(0, 0, 0.013);
-    socket.add(iris);
-    g.add(socket);
-    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.009, 0.013), kit.brow);
-    brow.position.set(0.038 * sx, 0.042, 0.09);
-    brow.rotation.z = -0.12 * sx;
-    g.add(brow);
-  }
-
-  const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.042, 0.009, 0.012), kit.mouth);
-  mouth.position.set(0, -0.056, 0.094);
-  roundBox(mouth.geometry, 0.004);
-  g.add(mouth);
-
-  for (const sx of [-1, 1]) {
-    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.023, 14, 12), kit.skin);
-    ear.scale.set(0.4, 1.0, 0.72);
-    ear.position.set(0.10 * sx, -0.008, 0.0);
-    g.add(ear);
-  }
-
-  const hair = new THREE.Mesh(
-    new THREE.SphereGeometry(0.113, 32, 24, 0, TAU, 0, Math.PI * 0.62), kit.hair);
-  hair.scale.set(0.96, 1.12, 1.04);
-  hair.position.set(0, 0.012, -0.004);
-  g.add(hair);
-  const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.088, 20, 16), kit.hair);
-  backHair.scale.set(0.96, 0.72, 0.82);
-  backHair.position.set(0, 0.0, -0.05);
-  g.add(backHair);
-
-  return g;
-}
+/* head & face are sculpted in Head.js (imported buildHead) */
 
 /* ============================ hand (detailed) ============================ */
 function buildHand(s, kit) {
