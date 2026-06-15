@@ -15,7 +15,8 @@ const gauss = (d, s) => Math.exp(-(d * d) / (s * s));
  */
 export function buildHead(kit) {
   const g = new THREE.Group();
-  g.position.y = 0.085;
+  g.position.y = 0.072;
+  g.scale.setScalar(0.9);   // athletic head-to-body ratio (was bobble-headed)
 
   g.add(sculptedSkull(kit.skin));
 
@@ -33,11 +34,11 @@ export function buildHead(kit) {
   }
 
   // ---- lips (subtle colour over the sculpted mouth) ----
-  const upperLip = new THREE.Mesh(new THREE.SphereGeometry(0.014, 16, 10), kit.lips);
+  const upperLip = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 5), kit.lips);
   upperLip.scale.set(1.7, 0.5, 0.5);
   upperLip.position.set(0, -0.05, 0.097);
   g.add(upperLip);
-  const lowerLip = new THREE.Mesh(new THREE.SphereGeometry(0.013, 16, 10), kit.lips);
+  const lowerLip = new THREE.Mesh(new THREE.SphereGeometry(0.013, 8, 5), kit.lips);
   lowerLip.scale.set(1.5, 0.62, 0.55);
   lowerLip.position.set(0, -0.066, 0.097);
   g.add(lowerLip);
@@ -47,12 +48,12 @@ export function buildHead(kit) {
 
   // ---- ears ----
   for (const sx of [-1, 1]) {
-    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.024, 16, 12), kit.skin);
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.024, 7, 5), kit.skin);
     ear.scale.set(0.36, 1.0, 0.72);
     ear.position.set(0.104 * sx, -0.006, -0.004);
     ear.rotation.y = -0.3 * sx;
     g.add(ear);
-    const concha = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 10), kit.innerEar);
+    const concha = new THREE.Mesh(new THREE.SphereGeometry(0.012, 6, 4), kit.innerEar);
     concha.scale.set(0.3, 0.9, 0.6);
     concha.position.set(0.108 * sx, -0.006, 0.006);
     g.add(concha);
@@ -66,7 +67,7 @@ export function buildHead(kit) {
 
 /* ----------------------------------------------------------------- skull */
 function sculptedSkull(mat) {
-  const geo = new THREE.SphereGeometry(R, 72, 56);
+  const geo = new THREE.SphereGeometry(R, 14, 11);
   const pos = geo.attributes.position;
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {
@@ -135,31 +136,31 @@ function sculpt(v) {
 function buildEye(sx, kit) {
   // A clean almond eye that sits flush on the face and stays fully lit.
   const eye = new THREE.Group();
-  eye.position.set(0.039 * sx, 0.018, 0.0995);
+  eye.position.set(0.0335 * sx, 0.008, 0.0995);
   eye.rotation.y = 0.32 * sx;        // follow the face normal (faces out)
   eye.rotation.z = -0.05 * sx;       // slight outer tilt
 
   // thin dark lash-line behind defines the almond outline
-  const liner = new THREE.Mesh(new THREE.SphereGeometry(0.0145, 20, 14), kit.brow);
-  liner.scale.set(1.9, 1.18, 0.16);
+  const liner = new THREE.Mesh(new THREE.SphereGeometry(0.0108, 8, 6), kit.brow);
+  liner.scale.set(1.6, 0.95, 0.16);
   liner.position.z = -0.001;
   eye.add(liner);
 
   // white sclera almond (sits proud of the face so it always catches light)
-  const white = new THREE.Mesh(new THREE.SphereGeometry(0.0135, 22, 16), kit.eyeWhite);
-  white.scale.set(1.7, 1.02, 0.45);
-  white.position.z = 0.0025;
+  const white = new THREE.Mesh(new THREE.SphereGeometry(0.0098, 8, 6), kit.eyeWhite);
+  white.scale.set(1.42, 0.8, 0.4);
+  white.position.z = 0.0022;
   eye.add(white);
 
-  // iris + pupil on the white
-  const iris = new THREE.Mesh(new THREE.CircleGeometry(0.0078, 22), kit.eyeIris);
-  iris.position.set(0, 0, 0.0085);
+  // iris + pupil on the white — sized like a real iris (≈ half the eye opening)
+  const iris = new THREE.Mesh(new THREE.CircleGeometry(0.0062, 10), kit.eyeIris);
+  iris.position.set(0, 0, 0.0078);
   eye.add(iris);
-  const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.0035, 16), kit.pupil);
-  pupil.position.set(0, 0, 0.0092);
+  const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.0028, 8), kit.pupil);
+  pupil.position.set(0, 0, 0.0085);
   eye.add(pupil);
-  const hi = new THREE.Mesh(new THREE.CircleGeometry(0.0019, 10), kit.eyeHi);
-  hi.position.set(0.003 * sx, 0.003, 0.0098);
+  const hi = new THREE.Mesh(new THREE.CircleGeometry(0.0015, 6), kit.eyeHi);
+  hi.position.set(0.0026 * sx, 0.0026, 0.0091);
   eye.add(hi);
 
   return eye;
@@ -169,7 +170,7 @@ function buildEye(sx, kit) {
 function buildHair(kit) {
   // a short, swept hairstyle that sits ON TOP of the skull with the hairline
   // clearly above the brow (forehead exposed), lower at the sides/back.
-  const geo = new THREE.SphereGeometry(R * 1.04, 56, 40, 0, TAU, 0, Math.PI * 0.52);
+  const geo = new THREE.SphereGeometry(R * 1.04, 16, 11, 0, TAU, 0, Math.PI * 0.52);
   const pos = geo.attributes.position;
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {

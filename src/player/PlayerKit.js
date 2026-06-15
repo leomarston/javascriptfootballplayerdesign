@@ -81,6 +81,12 @@ export function createKit(cfg = {}) {
     transparent: true, alphaTest: 0.3, depthWrite: false,
   });
 
+  // low-poly: flat (faceted) shading on every lit surface so each triangle
+  // reads as a crisp facet instead of a smooth gradient.
+  for (const m of [bodySkin, bodyJersey, bodyShorts, bodySocks, bodyAccent,
+    skin, boots, bootAccent, sole, hair, mouth, eyeWhite, eyeIris, pupil,
+    lips, innerEar, brow, collarMat]) { m.flatShading = true; }
+
   return {
     cfg: c,
     body: { skin: bodySkin, jersey: bodyJersey, shorts: bodyShorts, socks: bodySocks, accent: bodyAccent },

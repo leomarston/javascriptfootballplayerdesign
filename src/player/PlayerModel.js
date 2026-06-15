@@ -3,7 +3,7 @@ import { createKit } from './PlayerKit.js';
 import { buildHead } from './Head.js';
 
 const TAU = Math.PI * 2;
-const N = 24;            // radial segments per body ring
+const N = 8;            // radial segments per body ring (low-poly: octagonal rings)
 const LIFT = 0.04;      // raise model so boot soles rest on the pitch
 
 /**
@@ -112,28 +112,28 @@ export function createPlayerModel(cfg = {}) {
     { y: 1.06, x: 0, rx: 0.128, rz: 0.098, w: [['spine', 1]], mat: 'jersey' },
     { y: 1.16, x: 0, rx: 0.150, rz: 0.112, w: [['spine', 0.6], ['chest', 0.4]], mat: 'jersey' },
     { y: 1.26, x: 0, rx: 0.176, rz: 0.122, w: [['chest', 1]], mat: 'jersey' },
-    { y: 1.35, x: 0, rx: 0.186, rz: 0.118, w: [['chest', 1]], mat: 'jersey' },
-    { y: 1.42, x: 0, rx: 0.182, rz: 0.108, w: [['chest', 1]], ao: 0.95, mat: 'jersey' }, // shoulder shelf
-    { y: 1.47, x: 0, rx: 0.128, rz: 0.090, w: [['chest', 0.7], ['neck', 0.3]], ao: 0.85, mat: 'jersey' }, // trapezius -> neck
+    { y: 1.35, x: 0, rx: 0.188, rz: 0.120, w: [['chest', 1]], mat: 'jersey' },
+    { y: 1.41, x: 0, rx: 0.178, rz: 0.116, w: [['chest', 1]], ao: 0.95, mat: 'jersey' }, // shoulder shelf (rounder)
+    { y: 1.46, x: 0, rx: 0.132, rz: 0.094, w: [['chest', 0.7], ['neck', 0.3]], ao: 0.88, mat: 'jersey' }, // trapezius -> neck (gentler slope)
   ]);
-  // ---- neck (skin) — short & sturdy ----
+  // ---- neck (skin) — short & sturdy (athletic, sterno-mastoid bulk) ----
   addStack([
-    { y: 1.45, x: 0, rx: 0.066, rz: 0.062, w: [['chest', 0.5], ['neck', 0.5]], ao: 0.85, mat: 'skin' },
-    { y: 1.52, x: 0, rx: 0.058, rz: 0.055, w: [['neck', 1]], mat: 'skin' },
-    { y: 1.585, x: 0, rx: 0.052, rz: 0.05, w: [['neck', 0.5], ['head', 0.5]], mat: 'skin' },
+    { y: 1.45, x: 0, rx: 0.078, rz: 0.073, w: [['chest', 0.5], ['neck', 0.5]], ao: 0.85, mat: 'skin' },
+    { y: 1.52, x: 0, rx: 0.069, rz: 0.064, w: [['neck', 1]], mat: 'skin' },
+    { y: 1.585, x: 0, rx: 0.060, rz: 0.057, w: [['neck', 0.5], ['head', 0.5]], mat: 'skin' },
   ]);
   // ---- shorts: hip/waistband piece (the two legs cover the rest) ----
   addStack([
-    { y: 0.92, x: 0, rx: 0.140, rz: 0.103, w: [['pelvis', 1]], ao: 0.93, mat: 'shorts' },
-    { y: 0.98, x: 0, rx: 0.148, rz: 0.108, w: [['pelvis', 1]], mat: 'shorts' },
-    { y: 1.03, x: 0, rx: 0.135, rz: 0.102, w: [['pelvis', 0.7], ['spine', 0.3]], mat: 'shorts' },
+    { y: 0.95, x: 0, rx: 0.134, rz: 0.100, w: [['pelvis', 1]], ao: 0.92, mat: 'shorts' }, // hip line
+    { y: 1.00, x: 0, rx: 0.140, rz: 0.104, w: [['pelvis', 1]], mat: 'shorts' },            // waistband
+    { y: 1.04, x: 0, rx: 0.128, rz: 0.099, w: [['pelvis', 0.7], ['spine', 0.3]], mat: 'shorts' }, // tuck under jersey hem
   ]);
 
   // ---- arms + shorts-leg + legs, per side ----
   for (const [s, side] of [[1, 'L'], [-1, 'R']]) {
     addStack([
-      { y: 1.45, x: 0.138 * s, rx: 0.046, rz: 0.046, w: [['chest', 0.6], [`shoulder.${side}`, 0.4]], ao: 0.88, mat: 'jersey' }, // deltoid cap, blended into shoulder
-      { y: 1.39, x: 0.150 * s, rx: 0.050, rz: 0.050, w: [[`shoulder.${side}`, 0.85], ['chest', 0.15]], ao: 0.94, mat: 'jersey' },
+      { y: 1.435, x: 0.133 * s, rx: 0.053, rz: 0.051, w: [['chest', 0.55], [`shoulder.${side}`, 0.45]], ao: 0.9, mat: 'jersey' }, // deltoid cap, rounded into the shoulder slope
+      { y: 1.39, x: 0.150 * s, rx: 0.052, rz: 0.051, w: [[`shoulder.${side}`, 0.85], ['chest', 0.15]], ao: 0.94, mat: 'jersey' },
       { y: 1.31, x: 0.150 * s, rx: 0.044, rz: 0.044, w: [[`shoulder.${side}`, 1]], mat: 'jersey' },
       { y: 1.25, x: 0.148 * s, rx: 0.042, rz: 0.042, w: [[`shoulder.${side}`, 0.9], [`elbow.${side}`, 0.1]], mat: 'skin' },
       { y: 1.165, x: 0.146 * s, rx: 0.036, rz: 0.036, w: [[`shoulder.${side}`, 0.5], [`elbow.${side}`, 0.5]], mat: 'skin' },
@@ -143,11 +143,12 @@ export function createPlayerModel(cfg = {}) {
       { y: 0.905, x: 0.136 * s, rx: 0.026, rz: 0.026, w: [[`wrist.${side}`, 1]], mat: 'skin' },
     ]);
     const lx = 0.105 * s;
-    // shorts leg hugging the upper thigh, hem at mid-thigh
+    // shorts leg: drapes OUTSIDE the thigh (thigh ≈0.08–0.10 here) and splits
+    // into two leg openings only at the flared mid-thigh hem
     addStack([
-      { y: 0.70, x: lx, rx: 0.100, rz: 0.095, w: [[`hip.${side}`, 1]], ao: 0.95, mat: 'shorts' },
-      { y: 0.82, x: lx, rx: 0.108, rz: 0.101, w: [[`hip.${side}`, 1]], mat: 'shorts' },
-      { y: 0.94, x: lx, rx: 0.116, rz: 0.108, w: [[`hip.${side}`, 0.9], ['pelvis', 0.1]], mat: 'shorts' },
+      { y: 0.66, x: lx, rx: 0.090, rz: 0.086, w: [[`hip.${side}`, 1]], ao: 0.96, mat: 'shorts' }, // flared hem, legs separate
+      { y: 0.79, x: lx, rx: 0.100, rz: 0.096, w: [[`hip.${side}`, 1]], ao: 0.99, mat: 'shorts' }, // covers thigh
+      { y: 0.90, x: lx, rx: 0.112, rz: 0.107, w: [[`hip.${side}`, 0.85], ['pelvis', 0.15]], mat: 'shorts' }, // into waistband
     ]);
     // leg: thigh (skin) -> sock band (accent) -> sock (socks)
     addStack([
@@ -255,16 +256,16 @@ function makeFinger(len, mat, r = 0.011) {
   const j2 = new THREE.Group();
   j2.position.y = -a; j2.rotation.x = 0.55;
   j2.add(taper(b, r * 0.92, r * 0.8, mat));
-  const tip = new THREE.Mesh(new THREE.SphereGeometry(r * 0.8, 8, 8), mat);
+  const tip = new THREE.Mesh(new THREE.SphereGeometry(r * 0.8, 5, 4), mat);
   tip.position.y = -b; j2.add(tip);
   f.add(j2);
-  const knuckle = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 8), mat);
+  const knuckle = new THREE.Mesh(new THREE.SphereGeometry(r, 5, 4), mat);
   f.add(knuckle);
   return f;
 }
 
 function taper(len, rTop, rBot, mat) {
-  const geo = new THREE.CylinderGeometry(rTop, rBot, len, 10);
+  const geo = new THREE.CylinderGeometry(rTop, rBot, len, 6);
   geo.translate(0, -len / 2, 0);
   return new THREE.Mesh(geo, mat);
 }
@@ -279,18 +280,18 @@ function buildBoot(s, kit) {
   foot.position.set(0, -0.045, 0.075);
   g.add(foot);
 
-  const toe = new THREE.Mesh(new THREE.SphereGeometry(0.046, 16, 12), kit.boots);
+  const toe = new THREE.Mesh(new THREE.SphereGeometry(0.046, 8, 6), kit.boots);
   toe.scale.set(0.95, 0.7, 1.2);
   toe.position.set(0, -0.05, 0.20);
   g.add(toe);
 
-  const heel = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), kit.boots);
+  const heel = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), kit.boots);
   heel.scale.set(0.95, 0.92, 0.9);
   heel.position.set(0, -0.024, -0.03);
   g.add(heel);
 
   // ankle collar (covers sock end)
-  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.058, 0.06, 16), kit.boots);
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.058, 0.06, 8), kit.boots);
   collar.position.set(0, 0.015, 0.01);
   g.add(collar);
 
